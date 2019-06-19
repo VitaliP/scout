@@ -1,0 +1,33 @@
+.App {
+
+}
+
+.main {
+  margin: 100px auto;
+  max-width: 800px;
+}
+
+.navbar {
+  /*background-color: #f0f1f2;*/
+}
+
+.loading-lbl {
+  margin: 0 0 0 10px;
+}
+
+.modal-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: rgba(0,0,0,0.5);
+
+  .modal-dialog {
+    margin-top: 150px;
+  }
+
+}
+
+
