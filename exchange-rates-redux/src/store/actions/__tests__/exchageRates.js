@@ -5,15 +5,22 @@ import moxios from 'moxios';
 describe('exchangeRates actions',()=>{
 
     it('loading action',()=>{
-        const expectedState = {screenState: 'loading', screenData: null};
+        const expectedState = {
+            screenState: 'loading',
+            sort: {
+                sortBy: 'currency',
+                sortDirection: 'asc'
+            },
+            base: null,
+            date: null
+
+        };
         const store = testStore();
         store.dispatch(loading());
         expect(store.getState().exchangeRates).toEqual(expectedState);
     });
 
 });
-
-
 
 describe('fetchData action',()=>{
 
@@ -30,27 +37,26 @@ describe('fetchData action',()=>{
 
     it('on Success',()=>{
 
-        const screenData = [
-            { key: 'value' }
-        ];
-
-        const expectedState = {
-            screenState: 'display',
-            screenData: screenData
+        const responseData = {
+            base: 'TEST',
+            date: 'DATE',
+            rates: {some: 'data'}
         };
 
         moxios.wait(() => {
             const request = moxios.requests.mostRecent();
             request.respondWith({
                 status: 200,
-                response: screenData
+                response: responseData
             })
         });
 
         return store.dispatch(fetchData())
             .then(() => {
                 const newState = store.getState();
-                expect(newState.exchangeRates).toEqual(expectedState);
+                expect(newState.exchangeRates.base).toEqual(responseData.base);
+                expect(newState.exchangeRates.date).toEqual(responseData.date);
+                expect(newState.exchangeRates.rates).toEqual(responseData.rates);
             });
 
 
@@ -58,34 +64,19 @@ describe('fetchData action',()=>{
 
     it('on Failed',()=>{
 
-        const screenData = [
-            {
-                key: 'value'
-            }
-        ];
-
-        const expectedState = {
-            screenState: 'error',
-            screenData: null
-        };
-
-        // const store = testStore();
-
         moxios.wait(() => {
             const request = moxios.requests.mostRecent();
             request.respondWith({
-                status: 500,
-                response: screenData
+                status: 400,
+                response: {}
             })
         });
 
         return store.dispatch(fetchData())
             .then(() => {
                 const newState = store.getState();
-                expect(newState.exchangeRates).toEqual(expectedState);
+                expect(newState.exchangeRates.screenState).toEqual('error');
             });
-
-
     });
 
 

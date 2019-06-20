@@ -3,13 +3,18 @@ import exchangeRates from '../exchangeRates.reducer';
 
 
 
-describe('exchangeRates Teducer', ()=>{
+describe('exchangeRates Reducer', ()=>{
 
     it('Return default state',()=>{
         const newState = exchangeRates(undefined, {});
         expect(newState).toEqual({
             screenState: 'init',
-            screenData: null
+            sort: {
+                sortBy: 'currency',
+                sortDirection: 'asc'
+            },
+            base: null,
+            date: null
         });
     });
 
@@ -24,13 +29,17 @@ describe('exchangeRates Teducer', ()=>{
     it('Fetch data',()=>{
         const newState = exchangeRates(undefined, {
             type: FETCH_DATA,
-            payload: {some: 'data'}
+            payload: {
+                base: 'EUR',
+                date: '2019-06-20',
+                rates: { some: 'data'}
+            }
         });
 
-        expect(newState).toEqual({
-            screenState: 'display',
-            screenData: {some: 'data'}
-        });
+        expect(newState.screenState).toBe('display');
+        expect(newState.base).toBe('EUR');
+        expect(newState.date).toBe('2019-06-20');
+        expect(newState.rates).toEqual({some: 'data'});
     });
 
 });
